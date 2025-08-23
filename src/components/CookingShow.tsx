@@ -45,11 +45,11 @@ interface CookingShowProps {
 const CookingShow = ({
   episode = {
     id: "1",
-    title: "Butter Chicken Soul Stew",
+    title: "Butter Chicken Soul Stew - A Birthday Tribute to Mary Ann Davis",
     duration: 1800, // 30 minutes in seconds
     currentTime: 0,
     description:
-      "Auntie Mae combines traditional Indian butter chicken with soul food stew techniques for a delicious fusion dish.",
+      "In this special birthday tribute episode, Auntie Mae honors Mary Ann Davis by sharing her beloved Butter Chicken Soul Stew recipe - a beautiful fusion of Indian spices and soul food comfort that represents the journey from India to Detroit. This dish tells the story of adaptation, love, and the healing power of food.",
   },
   recipe = {
     id: "1",
@@ -154,8 +154,8 @@ const CookingShow = ({
           {/* Avatar overlay - this would be the 3D avatar in a real implementation */}
           <div className="absolute inset-0 flex items-center justify-center">
             <img
-              src="https://api.dicebear.com/7.x/avataaars/svg?seed=auntiemae&backgroundColor=b6e3f4"
-              alt="Auntie Mae Avatar"
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=auntie-mae-respectful&backgroundColor=f4e4c1&skinColor=brown&hairColor=gray&clothingColor=red&accessoriesColor=gold"
+              alt="Auntie Mae - Wise Indian-American Chef"
               className="h-[70%] w-auto"
             />
           </div>
@@ -306,22 +306,27 @@ const CookingShow = ({
               <ScrollArea className="h-[300px] rounded-md border p-4">
                 <div className="space-y-4">
                   <p>
-                    "This recipe reminds me of my early days in Detroit, when I
-                    was trying to blend the flavors of my Indian heritage with
-                    my husband's soul food traditions. The key is to let the
-                    spices bloom in the butter - that's where the magic
-                    happens!"
+                    "This recipe is dedicated to my dear friend Mary Ann Davis,
+                    whose birthday we celebrate today. Mary Ann taught me that
+                    food is medicine, and this dish represents the beautiful
+                    fusion of my Indian heritage with the soul food traditions I
+                    learned in Detroit. The key is to let the spices bloom in
+                    the butter - that's where the healing magic happens!"
+                  </p>
+                  <p>
+                    "Mary Ann always said that when we cook with love and
+                    intention, we're not just feeding bodies - we're nourishing
+                    souls. This Butter Chicken Soul Stew carries the wisdom of
+                    generations, from my grandmother's kitchen in India to the
+                    vibrant community kitchens of Detroit."
                   </p>
                   <p>
                     "If you can't find garam masala, you can make your own by
                     mixing cardamom, cinnamon, cloves, cumin, and coriander.
                     That's what I had to do back in the 60s when these spices
-                    weren't easy to find in Detroit!"
-                  </p>
-                  <p>
-                    "For a vegetarian version, you can substitute the chicken
-                    with chickpeas and cauliflower. Just adjust the cooking time
-                    accordingly."
+                    weren't easy to find in Detroit! For a vegetarian version,
+                    substitute with chickpeas and cauliflower - Mary Ann would
+                    approve of feeding everyone at the table."
                   </p>
                 </div>
               </ScrollArea>
@@ -342,10 +347,12 @@ const CookingShow = ({
               <p className="text-sm text-muted-foreground">
                 Original Air Date: June 15, 2023
               </p>
-              <p className="text-sm mt-2">
-                In this episode, Auntie Mae shares her signature Butter Chicken
-                Soul Stew recipe, combining traditional Indian spices with soul
-                food cooking techniques.
+              <p className="text-sm mb-4">
+                In this special birthday tribute episode, Auntie Mae honors Mary
+                Ann Davis by sharing the story behind her signature Butter
+                Chicken Soul Stew - a recipe that bridges cultures and heals
+                hearts, combining traditional Indian spices with soul food
+                cooking techniques learned in Detroit's vibrant community.
               </p>
             </CardContent>
           </Card>
@@ -360,10 +367,12 @@ const CookingShow = ({
 
           <h3 className="font-medium mb-2">Cultural Background</h3>
           <p className="text-sm mb-4">
-            This dish represents the fusion of Indian butter chicken (murgh
-            makhani) with slow-cooked soul food stews. The creamy tomato base is
-            common to both traditions, while the spice blend bridges Auntie
-            Mae's Indian heritage with Detroit's soul food scene.
+            This dish represents the beautiful fusion of Indian butter chicken
+            (murgh makhani) with slow-cooked soul food stews, honoring Mary Ann
+            Davis's belief that food is medicine. The creamy tomato base is
+            common to both traditions, while the healing spice blend bridges
+            Auntie Mae's Indian heritage with Detroit's soul food scene,
+            creating comfort that nourishes both body and spirit.
           </p>
 
           <div className="flex gap-2">

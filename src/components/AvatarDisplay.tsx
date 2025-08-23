@@ -20,14 +20,14 @@ interface AvatarDisplayProps {
 }
 
 const AvatarDisplay = ({
-  avatarUrl = "https://api.dicebear.com/7.x/avataaars/svg?seed=auntieMae",
+  avatarUrl = "https://api.dicebear.com/7.x/avataaars/svg?seed=auntie-mae-respectful&backgroundColor=f4e4c1&skinColor=brown&hairColor=gray&clothingColor=red&accessoriesColor=gold",
   animations = ["wave", "talk", "cook", "idle"],
-  currentOutfit = "Traditional Indian",
+  currentOutfit = "Traditional Indian Heritage",
   onAnimationChange = () => {},
 }: AvatarDisplayProps) => {
   const [currentAnimation, setCurrentAnimation] = useState("idle");
   const [isPlaying, setIsPlaying] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(100);
+  const [zoomLevel, setZoomLevel] = useState([100]);
 
   const handleAnimationChange = (animation: string) => {
     setCurrentAnimation(animation);
@@ -40,13 +40,13 @@ const AvatarDisplay = ({
   };
 
   const handleZoomChange = (value: number[]) => {
-    setZoomLevel(value[0]);
+    setZoomLevel(value);
   };
 
   const resetAvatar = () => {
     setCurrentAnimation("idle");
     setIsPlaying(false);
-    setZoomLevel(100);
+    setZoomLevel([100]);
   };
 
   return (
@@ -61,7 +61,7 @@ const AvatarDisplay = ({
           <motion.div
             className="relative"
             animate={{
-              scale: zoomLevel / 100,
+              scale: zoomLevel[0] / 100,
               y: isPlaying && currentAnimation === "wave" ? [0, -10, 0] : 0,
               rotate:
                 isPlaying && currentAnimation === "cook"
@@ -113,14 +113,14 @@ const AvatarDisplay = ({
           <div className="flex items-center space-x-2">
             <span className="text-sm">Zoom:</span>
             <Slider
-              value={[zoomLevel]}
+              value={zoomLevel}
               min={50}
               max={150}
               step={5}
               onValueChange={handleZoomChange}
               className="flex-1"
             />
-            <span className="text-sm w-10">{zoomLevel}%</span>
+            <span className="text-sm w-10">{zoomLevel[0]}%</span>
           </div>
 
           <div className="flex justify-between">

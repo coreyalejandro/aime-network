@@ -24,10 +24,11 @@ const Home = () => {
   const featuredContent = [
     {
       type: "cooking",
-      title: "Auntie Mae's Healing Kitchen",
-      subtitle: "NEW EPISODE",
+      title:
+        "Auntie Mae's Healing Kitchen - Birthday Tribute to Mary Ann Davis",
+      subtitle: "SPECIAL EPISODE",
       description:
-        "Thyroid-friendly comfort foods that nourish your body and soul",
+        "A heartfelt birthday tribute featuring healing comfort foods that nourish body and soul, honoring Mary Ann Davis's legacy",
       image:
         "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
       badge: "TRENDING",
@@ -184,7 +185,10 @@ const Home = () => {
               className="hidden lg:block absolute right-10 top-1/2 transform -translate-y-1/2"
             >
               <div className="scale-75">
-                <AvatarDisplay />
+                <AvatarDisplay
+                  avatarUrl="https://api.dicebear.com/7.x/avataaars/svg?seed=auntie-mae-respectful&backgroundColor=f4e4c1&skinColor=brown&hairColor=gray&clothingColor=red&accessoriesColor=gold"
+                  currentOutfit="Traditional Indian Heritage"
+                />
               </div>
             </motion.div>
           </div>

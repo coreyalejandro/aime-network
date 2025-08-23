@@ -44,8 +44,9 @@ const RecipeBrowser = () => {
   const recipes: Recipe[] = [
     {
       id: "1",
-      name: "Butter Chicken Cornbread",
-      description: "A fusion of classic butter chicken with Southern cornbread",
+      name: "Mary Ann's Butter Chicken Cornbread",
+      description:
+        "A healing fusion of classic butter chicken with Southern cornbread, dedicated to Mary Ann Davis's birthday",
       category: "Fusion Dishes",
       image:
         "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=600&q=80",
@@ -254,7 +255,10 @@ const RecipeBrowser = () => {
     <div className="w-full h-full bg-white p-6 overflow-auto">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-center">
-          Auntie Mae's Recipe Collection
+          Auntie Mae's Healing Recipe Collection
+          <p className="text-sm text-muted-foreground mt-2">
+            Honoring Mary Ann Davis - Where Food Becomes Medicine
+          </p>
         </h1>
 
         <div className="relative mb-6">

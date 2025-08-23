@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,10 @@ import {
   Brain,
   Eye,
   Zap,
+  RotateCcw,
+  Settings,
+  Maximize,
+  Minimize,
 } from "lucide-react";
 
 interface TourSection {
@@ -25,14 +29,39 @@ interface TourSection {
   content: string;
   symptoms: string[];
   bodyPart: string;
+  duration?: number;
+  interactiveElements?: string[];
 }
 
-const GravesDiseaseTour = () => {
+interface GravesDiseaseTourProps {
+  autoPlay?: boolean;
+  showControls?: boolean;
+  fullscreen?: boolean;
+  onSectionChange?: (sectionIndex: number) => void;
+  onComplete?: () => void;
+  customSections?: TourSection[];
+  theme?: "dark" | "light";
+  speed?: number;
+}
+
+const GravesDiseaseTour: React.FC<GravesDiseaseTourProps> = ({
+  autoPlay = false,
+  showControls = true,
+  fullscreen = false,
+  onSectionChange,
+  onComplete,
+  customSections,
+  theme = "dark",
+  speed = 1,
+}) => {
   const [currentSection, setCurrentSection] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(80);
   const [isMuted, setIsMuted] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(fullscreen);
+  const [playbackSpeed, setPlaybackSpeed] = useState(speed);
+  const [showSettings, setShowSettings] = useState(false);
 
   const tourSections: TourSection[] = [
     {
@@ -50,6 +79,11 @@ const GravesDiseaseTour = () => {
         "Weight loss despite increased appetite",
       ],
       bodyPart: "thyroid",
+      duration: 20000,
+      interactiveElements: [
+        "Thyroid gland visualization",
+        "Hormone level indicators",
+      ],
     },
     {
       id: "heart",
@@ -66,6 +100,8 @@ const GravesDiseaseTour = () => {
         "Shortness of breath",
       ],
       bodyPart: "heart",
+      duration: 18000,
+      interactiveElements: ["Heart rate monitor", "Blood pressure gauge"],
     },
     {
       id: "brain",
@@ -82,6 +118,8 @@ const GravesDiseaseTour = () => {
         "Hand tremors",
       ],
       bodyPart: "brain",
+      duration: 22000,
+      interactiveElements: ["Neural activity map", "Stress level indicators"],
     },
     {
       id: "eyes",
@@ -98,23 +136,49 @@ const GravesDiseaseTour = () => {
         "Eye pain",
       ],
       bodyPart: "eyes",
+      duration: 19000,
+      interactiveElements: [
+        "Eye pressure visualization",
+        "Inflammation markers",
+      ],
     },
   ];
 
-  const currentTourSection = tourSections[currentSection];
+  // Use custom sections if provided, otherwise use default
+  const activeSections = customSections || tourSections;
+  const currentTourSection = activeSections[currentSection];
+
+  // Callback for section changes
+  const handleSectionChange = useCallback(
+    (newSection: number) => {
+      setCurrentSection(newSection);
+      setProgress(0);
+      onSectionChange?.(newSection);
+    },
+    [onSectionChange],
+  );
+
+  // Callback for tour completion
+  const handleTourComplete = useCallback(() => {
+    setIsPlaying(false);
+    onComplete?.();
+  }, [onComplete]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying) {
+      const sectionDuration = currentTourSection.duration || 20000;
+      const incrementValue = (100 / (sectionDuration / 100)) * playbackSpeed;
+
       interval = setInterval(() => {
         setProgress((prev) => {
-          const newProgress = prev + 0.5;
+          const newProgress = prev + incrementValue;
           if (newProgress >= 100) {
-            if (currentSection < tourSections.length - 1) {
-              setCurrentSection(currentSection + 1);
+            if (currentSection < activeSections.length - 1) {
+              handleSectionChange(currentSection + 1);
               return 0;
             } else {
-              setIsPlaying(false);
+              handleTourComplete();
               return 100;
             }
           }
@@ -123,24 +187,39 @@ const GravesDiseaseTour = () => {
       }, 100);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, currentSection, tourSections.length]);
+  }, [
+    isPlaying,
+    currentSection,
+    activeSections.length,
+    playbackSpeed,
+    currentTourSection.duration,
+    handleSectionChange,
+    handleTourComplete,
+  ]);
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
 
   const nextSection = () => {
-    if (currentSection < tourSections.length - 1) {
-      setCurrentSection(currentSection + 1);
-      setProgress(0);
+    if (currentSection < activeSections.length - 1) {
+      handleSectionChange(currentSection + 1);
     }
   };
 
   const prevSection = () => {
     if (currentSection > 0) {
-      setCurrentSection(currentSection - 1);
-      setProgress(0);
+      handleSectionChange(currentSection - 1);
     }
+  };
+
+  const resetTour = () => {
+    handleSectionChange(0);
+    setIsPlaying(false);
+  };
+
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
   };
 
   const getBodyVisualization = (bodyPart: string) => {
@@ -159,8 +238,22 @@ const GravesDiseaseTour = () => {
     );
   };
 
+  const containerClasses = `w-full ${isFullscreen ? "fixed inset-0 z-50" : "h-screen"} ${
+    theme === "dark" ? "bg-black text-white" : "bg-white text-black"
+  } overflow-hidden`;
+
+  const overlayClasses =
+    theme === "dark"
+      ? "bg-black/70 backdrop-blur-md"
+      : "bg-white/70 backdrop-blur-md";
+
+  const symptomsPanelClasses =
+    theme === "dark"
+      ? "bg-red-900/80 backdrop-blur-md"
+      : "bg-red-100/80 backdrop-blur-md";
+
   return (
-    <div className="w-full h-screen bg-black text-white overflow-hidden">
+    <div className={containerClasses}>
       {/* IMAX-style immersive display */}
       <div className="relative w-full h-[70vh]">
         <AnimatePresence mode="wait">
@@ -229,23 +322,42 @@ const GravesDiseaseTour = () => {
           <motion.div
             initial={{ x: -100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="bg-black/70 backdrop-blur-md rounded-lg p-6"
+            className={`${overlayClasses} rounded-lg p-6`}
           >
             <div className="flex items-center mb-3">
               <div className="text-red-400 mr-3">{currentTourSection.icon}</div>
               <Badge variant="destructive" className="bg-red-600">
-                Section {currentSection + 1} of {tourSections.length}
+                Section {currentSection + 1} of {activeSections.length}
               </Badge>
             </div>
             <h2 className="text-2xl font-bold mb-2 text-red-400">
               {currentTourSection.title}
             </h2>
-            <p className="text-gray-300 mb-4">
+            <p
+              className={`${theme === "dark" ? "text-gray-300" : "text-gray-700"} mb-4`}
+            >
               {currentTourSection.description}
             </p>
-            <p className="text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed mb-4">
               {currentTourSection.content}
             </p>
+            {currentTourSection.interactiveElements && (
+              <div className="mt-4">
+                <h4 className="text-sm font-semibold mb-2">
+                  Interactive Elements:
+                </h4>
+                <ul className="text-xs space-y-1">
+                  {currentTourSection.interactiveElements.map(
+                    (element, index) => (
+                      <li key={index} className="flex items-center">
+                        <div className="w-1 h-1 bg-red-400 rounded-full mr-2" />
+                        {element}
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            )}
           </motion.div>
         </div>
 
@@ -254,9 +366,13 @@ const GravesDiseaseTour = () => {
           <motion.div
             initial={{ x: 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="bg-red-900/80 backdrop-blur-md rounded-lg p-4"
+            className={`${symptomsPanelClasses} rounded-lg p-4`}
           >
-            <h3 className="text-lg font-bold mb-3 text-red-300">Symptoms</h3>
+            <h3
+              className={`text-lg font-bold mb-3 ${theme === "dark" ? "text-red-300" : "text-red-700"}`}
+            >
+              Symptoms
+            </h3>
             <ul className="space-y-2">
               {currentTourSection.symptoms.map((symptom, index) => (
                 <motion.li
@@ -266,7 +382,9 @@ const GravesDiseaseTour = () => {
                   transition={{ delay: index * 0.1 }}
                   className="text-sm flex items-center"
                 >
-                  <div className="w-2 h-2 bg-red-400 rounded-full mr-2" />
+                  <div
+                    className={`w-2 h-2 ${theme === "dark" ? "bg-red-400" : "bg-red-600"} rounded-full mr-2`}
+                  />
                   {symptom}
                 </motion.li>
               ))}
@@ -275,97 +393,183 @@ const GravesDiseaseTour = () => {
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="h-[30vh] bg-gradient-to-t from-black to-gray-900 p-6">
-        <div className="max-w-6xl mx-auto">
-          {/* Progress bar */}
-          <div className="mb-4">
-            <Progress value={progress} className="h-2 bg-gray-800" />
-            <div className="flex justify-between text-xs text-gray-400 mt-1">
-              <span>{currentTourSection.title}</span>
-              <span>{Math.round(progress)}% Complete</span>
+      {/* Top controls bar */}
+      <div className="absolute top-4 right-4 flex items-center space-x-2 z-10">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setShowSettings(!showSettings)}
+          className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleFullscreen}
+          className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
+        >
+          {isFullscreen ? (
+            <Minimize className="h-4 w-4" />
+          ) : (
+            <Maximize className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+
+      {/* Settings panel */}
+      {showSettings && (
+        <div className="absolute top-16 right-4 z-20">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`${overlayClasses} rounded-lg p-4 min-w-[200px]`}
+          >
+            <h4 className="font-semibold mb-3">Settings</h4>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium">Playback Speed</label>
+                <div className="flex items-center space-x-2 mt-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setPlaybackSpeed(Math.max(0.5, playbackSpeed - 0.25))
+                    }
+                    className="text-xs"
+                  >
+                    -
+                  </Button>
+                  <span className="text-sm">{playbackSpeed}x</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setPlaybackSpeed(Math.min(3, playbackSpeed + 0.25))
+                    }
+                    className="text-xs"
+                  >
+                    +
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
+          </motion.div>
+        </div>
+      )}
 
-          {/* Control buttons */}
-          <div className="flex items-center justify-center space-x-4 mb-6">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={prevSection}
-              disabled={currentSection === 0}
-              className="text-white hover:bg-white/20"
-            >
-              <SkipBack className="h-5 w-5" />
-            </Button>
+      {/* Controls */}
+      {showControls && (
+        <div
+          className={`h-[30vh] ${theme === "dark" ? "bg-gradient-to-t from-black to-gray-900" : "bg-gradient-to-t from-white to-gray-100"} p-6`}
+        >
+          <div className="max-w-6xl mx-auto">
+            {/* Progress bar */}
+            <div className="mb-4">
+              <Progress value={progress} className="h-2 bg-gray-800" />
+              <div className="flex justify-between text-xs text-gray-400 mt-1">
+                <span>{currentTourSection.title}</span>
+                <span>{Math.round(progress)}% Complete</span>
+              </div>
+            </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={togglePlayPause}
-              className="text-white hover:bg-white/20 w-12 h-12"
-            >
-              {isPlaying ? (
-                <Pause className="h-6 w-6" />
-              ) : (
-                <Play className="h-6 w-6" />
-              )}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={nextSection}
-              disabled={currentSection === tourSections.length - 1}
-              className="text-white hover:bg-white/20"
-            >
-              <SkipForward className="h-5 w-5" />
-            </Button>
-
-            <div className="flex items-center space-x-2 ml-8">
+            {/* Control buttons */}
+            <div className="flex items-center justify-center space-x-4 mb-6">
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setIsMuted(!isMuted)}
-                className="text-white hover:bg-white/20"
+                onClick={resetTour}
+                className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
               >
-                {isMuted ? (
-                  <VolumeX className="h-4 w-4" />
+                <RotateCcw className="h-5 w-5" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={prevSection}
+                disabled={currentSection === 0}
+                className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
+              >
+                <SkipBack className="h-5 w-5" />
+              </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={togglePlayPause}
+                className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"} w-12 h-12`}
+              >
+                {isPlaying ? (
+                  <Pause className="h-6 w-6" />
                 ) : (
-                  <Volume2 className="h-4 w-4" />
+                  <Play className="h-6 w-6" />
                 )}
               </Button>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={nextSection}
+                disabled={currentSection === activeSections.length - 1}
+                className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
+              >
+                <SkipForward className="h-5 w-5" />
+              </Button>
+
+              <div className="flex items-center space-x-2 ml-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMuted(!isMuted)}
+                  className={`${theme === "dark" ? "text-white hover:bg-white/20" : "text-black hover:bg-black/20"}`}
+                >
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Section navigation */}
+            <div className="flex justify-center space-x-2">
+              {activeSections.map((section, index) => (
+                <Button
+                  key={section.id}
+                  variant={index === currentSection ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => handleSectionChange(index)}
+                  className={`text-xs ${
+                    index === currentSection
+                      ? "bg-red-600 text-white"
+                      : theme === "dark"
+                        ? "text-gray-400 hover:text-white hover:bg-white/20"
+                        : "text-gray-600 hover:text-black hover:bg-black/20"
+                  }`}
+                >
+                  {section.icon}
+                  <span className="ml-1 hidden md:inline">
+                    {section.title.split(":")[0]}
+                  </span>
+                </Button>
+              ))}
             </div>
           </div>
-
-          {/* Section navigation */}
-          <div className="flex justify-center space-x-2">
-            {tourSections.map((section, index) => (
-              <Button
-                key={section.id}
-                variant={index === currentSection ? "default" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setCurrentSection(index);
-                  setProgress(0);
-                }}
-                className={`text-xs ${
-                  index === currentSection
-                    ? "bg-red-600 text-white"
-                    : "text-gray-400 hover:text-white hover:bg-white/20"
-                }`}
-              >
-                {section.icon}
-                <span className="ml-1 hidden md:inline">
-                  {section.title.split(":")[0]}
-                </span>
-              </Button>
-            ))}
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
+};
+
+// Default export with default props for easy plug-and-play usage
+GravesDiseaseTour.defaultProps = {
+  autoPlay: false,
+  showControls: true,
+  fullscreen: false,
+  theme: "dark",
+  speed: 1,
 };
 
 export default GravesDiseaseTour;
