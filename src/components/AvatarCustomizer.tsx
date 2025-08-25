@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { useAuntieMae } from "../contexts/AuntieMaeContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -391,6 +392,8 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({
     setSearchQuery(""); // Clear search
   }, []);
 
+  const { dispatch } = useAuntieMae();
+
   const handleOutfitChange = useCallback((outfitId: string) => {
     setSelectedOutfit(outfitId);
 
@@ -409,7 +412,10 @@ const AvatarCustomizer: React.FC<AvatarCustomizerProps> = ({
       seed: outfitId,
       clothingStyle: outfitId,
     }));
-  }, []);
+
+    // Update Auntie Mae's outfit in global state
+    dispatch({ type: 'SET_OUTFIT', payload: outfitId });
+  }, [dispatch]);
 
   const handleSaveChanges = useCallback(() => {
     onSave?.(avatarConfig);

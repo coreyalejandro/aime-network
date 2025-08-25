@@ -1,11 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import AuntieMaeAvatar from "./AuntieMaeAvatar";
+import DrFeelgoodAvatar from "./DrFeelgoodAvatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import AvatarDisplay from "./AvatarDisplay";
+
 import {
   ChefHat,
   Book,
@@ -18,6 +20,7 @@ import {
   Star,
   TrendingUp,
   Users,
+  Sparkles,
 } from "lucide-react";
 
 const Home = () => {
@@ -30,7 +33,7 @@ const Home = () => {
       description:
         "A heartfelt birthday tribute featuring healing comfort foods that nourish body and soul, honoring Mary Ann Davis's legacy",
       image:
-        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&q=80",
+        "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&q=80",
       badge: "TRENDING",
       category: "Cooking Show",
     },
@@ -45,6 +48,17 @@ const Home = () => {
       badge: "EXCLUSIVE",
       category: "Health Education",
     },
+    {
+      type: "fashion",
+      title: "Sustainable Fashion Show - Healing Through Style",
+      subtitle: "NEW SERIES",
+      description:
+        "Discover how fashion can be part of your healing journey with sustainable, confidence-boosting styles",
+      image:
+        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80",
+      badge: "NEW",
+      category: "Fashion & Wellness",
+    },
   ];
 
   const healthStories = [
@@ -52,7 +66,7 @@ const Home = () => {
       title: "SHOCKING: What Doctors Don't Tell You About Thyroid Health!",
       subtitle: "Local Woman Discovers Secret to Managing Graves' Disease",
       image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&q=80",
+        "https://images.unsplash.com/photo-1594736797933-d0200ba2fe65?w=400&q=80",
       category: "HEALTH SECRETS",
     },
     {
@@ -66,7 +80,7 @@ const Home = () => {
       title: "CELEBRITY CHEF'S SECRET: How Auntie Mae Beat Her Diagnosis",
       subtitle: "From India to Detroit: A Journey of Healing Through Food",
       image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+        "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=400&q=80",
       category: "INSPIRATION",
     },
   ];
@@ -78,15 +92,7 @@ const Home = () => {
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="text-4xl md:text-5xl font-black font-serif text-yellow-400 drop-shadow-lg">
-              Dr. FeelGood's
-            </div>
-            <div className="hidden md:block">
-              <div className="text-lg font-bold text-red-200">
-                BLACK WOMEN'S GUIDE TO
-              </div>
-              <div className="text-2xl font-black text-yellow-300">
-                GRAVES' DISEASE
-              </div>
+              The Black Women's Guide to Graves' Disease
             </div>
           </div>
           <nav className="hidden md:flex space-x-2">
@@ -108,6 +114,14 @@ const Home = () => {
             >
               <ChefHat className="mr-2 h-4 w-4" /> RECIPES
             </Button>
+            <Link to="/fashion-show">
+              <Button
+                variant="ghost"
+                className="text-white hover:bg-red-800 border border-yellow-400"
+              >
+                <Palette className="mr-2 h-4 w-4" /> FASHION
+              </Button>
+            </Link>
           </nav>
         </div>
 
@@ -131,7 +145,7 @@ const Home = () => {
         <div className="relative h-[70vh] overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=1600&q=80"
+              src="https://images.unsplash.com/photo-1594736797933-d0200ba2fe65?w=1600&q=80"
               alt="Hero background"
               className="w-full h-full object-cover opacity-40"
             />
@@ -160,35 +174,72 @@ const Home = () => {
                   an unprecedented look inside your body.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Button
-                    size="lg"
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-lg"
-                  >
-                    <Play className="mr-2 h-5 w-5" /> START YOUR JOURNEY
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black font-bold px-8 py-4 text-lg"
-                  >
-                    <Heart className="mr-2 h-5 w-5" /> BODY TOUR
-                  </Button>
+                  <Link to="/cooking-show">
+                    <Button
+                      size="lg"
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-4 text-lg"
+                    >
+                      <Play className="mr-2 h-5 w-5" /> START YOUR JOURNEY
+                    </Button>
+                  </Link>
+                  <Link to="/body-tour">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black font-bold px-8 py-4 text-lg"
+                    >
+                      <Heart className="mr-2 h-5 w-5" /> BODY TOUR
+                    </Button>
+                  </Link>
+                  <Link to="/auntie-mae-ai">
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      className="border-2 border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-black font-bold px-8 py-4 text-lg"
+                    >
+                      <Sparkles className="mr-2 h-5 w-5" /> TALK TO AUNTIE MAE
+                    </Button>
+                  </Link>
+
                 </div>
               </motion.div>
             </div>
 
-            {/* Avatar Display - smaller and positioned */}
+            {/* Avatar Display - Both Dr. Feelgood and Auntie Mae Side by Side */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="hidden lg:block absolute right-10 top-1/2 transform -translate-y-1/2"
+              className="block absolute right-4 lg:right-10 top-1/3 transform -translate-y-1/2"
             >
-              <div className="scale-75">
-                <AvatarDisplay
-                  avatarUrl="https://api.dicebear.com/7.x/avataaars/svg?seed=auntie-mae-respectful&backgroundColor=f4e4c1&skinColor=brown&hairColor=gray&clothingColor=red&accessoriesColor=gold"
-                  currentOutfit="Traditional Indian Heritage"
-                />
+              <div className="flex flex-row space-x-4 lg:space-x-6">
+                {/* Dr. Feelgood Avatar */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="bg-gradient-to-b from-blue-50 to-cyan-100 rounded-lg p-4 lg:p-6 shadow-elev-3 border-2 border-blue-400"
+                >
+                  <DrFeelgoodAvatar size="medium" showLabel={false} />
+                  <div className="text-center mt-3 lg:mt-4">
+                    <p className="text-sm lg:text-base font-bold text-gray-800">Dr. Feelgood</p>
+                    <p className="text-xs text-gray-600">Your Medical Guide</p>
+                  </div>
+                </motion.div>
+                
+                {/* Auntie Mae Avatar */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="bg-gradient-to-b from-amber-50 to-orange-100 rounded-lg p-4 lg:p-6 shadow-elev-3 border-2 border-yellow-400"
+                >
+                  <AuntieMaeAvatar size="medium" showLabel={false} />
+                  <div className="text-center mt-3 lg:mt-4">
+                    <p className="text-sm lg:text-base font-bold text-gray-800">Auntie Mae</p>
+                    <p className="text-xs text-gray-600">Your Health Guide</p>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           </div>
@@ -201,7 +252,7 @@ const Home = () => {
             <h2 className="text-3xl font-black text-yellow-400 mb-8 flex items-center">
               <Star className="mr-3 h-8 w-8" /> FEATURED CONTENT
             </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {featuredContent.map((content, index) => (
                 <motion.div
                   key={content.type}
@@ -233,12 +284,20 @@ const Home = () => {
                       <p className="text-gray-300 mb-4">
                         {content.description}
                       </p>
-                      <Button className="w-full bg-red-600 hover:bg-red-700 font-bold">
-                        <Play className="mr-2 h-4 w-4" />
-                        {content.type === "cooking"
-                          ? "WATCH COOKING SHOW"
-                          : "START BODY TOUR"}
-                      </Button>
+                      <Link to={
+                        content.type === "cooking" ? "/cooking-show" : 
+                        content.type === "tour" ? "/body-tour" : 
+                        "/fashion-show"
+                      }>
+                        <Button className="w-full bg-red-600 hover:bg-red-700 font-bold">
+                          <Play className="mr-2 h-4 w-4" />
+                          {content.type === "cooking"
+                            ? "WATCH COOKING SHOW"
+                            : content.type === "tour"
+                            ? "START BODY TOUR"
+                            : "WATCH FASHION SHOW"}
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -315,7 +374,7 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <h2 className="text-2xl font-black text-yellow-400 mb-4">
-                Dr. FeelGood's Guide
+                The Black Women's Guide
               </h2>
               <p className="text-gray-300 mb-4">
                 Empowering Black women with knowledge, community, and healing
@@ -365,6 +424,12 @@ const Home = () => {
                 >
                   Healing Recipes
                 </Link>
+                <Link
+                  to="/fashion-show"
+                  className="block text-gray-300 hover:text-yellow-400 transition-colors"
+                >
+                  Fashion Show
+                </Link>
               </div>
             </div>
             <div>
@@ -401,8 +466,7 @@ const Home = () => {
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-center">
             <p className="text-gray-400 text-sm">
-              © {new Date().getFullYear()} Black Women's Dr. FeelGood's Guide
-              to Graves' Disease.
+              © {new Date().getFullYear()} The Black Women's Guide to Graves' Disease.
               <span className="text-yellow-400 font-bold">
                 {" "}
                 Healing Through Knowledge & Community.

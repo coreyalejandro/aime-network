@@ -303,13 +303,13 @@ const GravesDiseaseTour: React.FC<GravesDiseaseTourProps> = ({
                   className="bg-white/10 backdrop-blur-md rounded-full p-4"
                 >
                   <img
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=drfeelgood&backgroundColor=b6e3f4"
-                    alt="Dr. FeelGood Avatar"
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=health-guide&backgroundColor=b6e3f4"
+                    alt="Health Guide Avatar"
                     className="w-24 h-24 rounded-full"
                   />
                 </motion.div>
                 <div className="text-center mt-2">
-                  <p className="text-sm font-medium">Dr. FeelGood</p>
+                  <p className="text-sm font-medium">Health Guide</p>
                   <p className="text-xs text-gray-300">Your Guide</p>
                 </div>
               </div>
